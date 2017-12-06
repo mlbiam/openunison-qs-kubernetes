@@ -1,0 +1,55 @@
+<application name="registeru2f" azTimeoutMillis="30000" >
+  <urls>
+    <url regex="false" authChain="enterprise_idp_standalone" overrideHost="false" overrideReferer="false">
+        <host>#[OU_HOST]</host>
+        <filterChain>
+          <filter class="com.tremolosecurity.unison.google.u2f.Registration">
+                  <!-- Encryption key for encrypting/decrypting the attribute that stores the user's tokens -->
+                  <param name="encryptionKeyName" value="session-unison" />
+                  <!-- The name of the attribute to retrieve the registered keys from -->
+                  <param name="attribute" value="u2fdata" />
+                  <!-- The URI of the JSP page that will challenge the U2F device and provide the registration response -->
+                  <param name="challengeURI" value="/auth/forms/u2fRegistration.jsp" />
+                  <!-- The name of the workflow to run to update the keys attribute -->
+                  <param name="workflowName" value="u2fregistration" />
+                  <!-- The attribute to identify the user during the challenge and in the workflow -->
+                  <param name="uidAttributeName" value="uid" />
+                  <!-- The URI of the jsp page to send the user to once the regitration process is completed -->
+                  <param name="completedURI" value="/auth/forms/u2fRegistrationComplete.jsp" />
+                  <!-- If you only want to allow certain devices or manufacturers -->
+                  <param name="requireAttestation" value="false" />
+                  <!-- If requiring attestation of the device, list of certificates used to check the attestation.  May be listed multiple times. -->
+                  <param name="trustedCertificate" value="" />
+          </filter>
+        </filterChain>
+        <uri>/registertoken</uri>
+
+        <results>
+            <auSuccess></auSuccess>
+            <auFail>Default Login Failure</auFail>
+            <azSuccess></azSuccess>
+            <azFail>PrivilegedRequest</azFail>
+        </results>
+        <azRules>
+            <rule scope="filter" constraint="(objectClass=*)"/>
+        </azRules>
+    </url>
+  </urls>
+  <!-- The cookie configuration determines how sessions are managed for this application -->
+  <cookieConfig>
+    <!-- The name of the session cookie for this application.  Applications that want SSO between them should have the same cookie name -->
+      <sessionCookieName>tremolosession</sessionCookieName>
+    <!-- The domain of component of the cookie -->
+    <domain>#[OU_COOKIE_DOMAIN]</domain>
+    <!-- The URL that OpenUnison will interpret as the URL to end the session -->
+    <logoutURI>/logout</logoutURI>
+    <!-- The name of the AES-256 key in the keystore to use to encrypt this session -->
+    <keyAlias>session-unison</keyAlias>
+    <!-- If set to true, the cookie's secure flag is set to true and the browser will only send this cookie over https connections -->
+    <secure>false</secure>
+    <!-- The number of secconds that the session should be allowed to be idle before no longer being valid -->
+    <timeout>900</timeout>
+    <!-- required but ignored -->
+    <scope>-1</scope>
+  </cookieConfig>
+</application>

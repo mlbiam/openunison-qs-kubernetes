@@ -1,0 +1,22 @@
+<workflow name="u2fregistration">
+        <tasks>
+            <customTask className="com.tremolosecurity.provisioning.customTasks.LoadGroups">
+                        <param name="nameAttr" value="uid"/>
+                        <param name="inverse" value="false"/>
+                </customTask>
+                <mapping  strict="true">
+                  <map>
+                    <mapping targetAttributeName="sub" sourceType="user" targetAttributeSource="uid"/>
+                    <mapping targetAttributeName="u2fdata" sourceType="user" targetAttributeSource="u2fdata"/>
+                  </map>
+                  <onSuccess>
+                <provision sync="true" target="jitdb">
+                  <attributes>
+                    <value>sub</value>
+                    <value>u2fdata</value>
+                  </attributes>
+                </provision>
+              </onSuccess>
+              </mapping>
+        </tasks>
+</workflow>

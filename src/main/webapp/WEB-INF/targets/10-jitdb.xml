@@ -25,4 +25,5 @@
   <targetAttribute name="mail" source="mail" sourceType="user"/>
   <targetAttribute name="firstName" source="firstName" sourceType="user"/>
   <targetAttribute name="lastName" source="lastName" sourceType="user"/>
+  <targetAttribute name="u2fdata" source="u2fdata" sourceType="user" />
 </target>

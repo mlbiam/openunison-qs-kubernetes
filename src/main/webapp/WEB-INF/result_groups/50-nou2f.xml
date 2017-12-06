@@ -1,0 +1,7 @@
+<resultGroup name="nou2f">
+  <result>
+    <type>redirect</type>
+    <source>static</source>
+    <value>/registertoken</value>
+  </result>
+</resultGroup>

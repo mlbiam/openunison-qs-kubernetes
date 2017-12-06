@@ -1,0 +1,6 @@
+<mechanism name="u2f">
+        <uri>/auth/u2f</uri>
+        <className>com.tremolosecurity.unison.google.u2f.U2fAuth</className>
+        <init></init>
+        <params></params>
+</mechanism>

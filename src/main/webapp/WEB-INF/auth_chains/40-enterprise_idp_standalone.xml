@@ -1,4 +1,4 @@
-<chain name="enterprise_idp" level="20" root="o=Data">
+<chain name="enterprise_idp_standalone" level="15" root="o=Data">
   <authMech>
     <name>SAML2</name>
     <required>required</required>
@@ -24,7 +24,6 @@
       <param name="idpRedirLogoutURL" value="#[IDP_LOGOUT]"/>
     </params>
   </authMech>
-
   <authMech>
     <name>jit</name>
     <required>required</required>
@@ -33,29 +32,6 @@
       <param name="workflowName" value="jitdb" />
     </params>
   </authMech>
-
-
-  <authMech>
-        <name>u2f</name>
-        <required>required</required>
-        <params>
-                <param name="attribute" value="u2fdata"/>
-                <param name="encryptionKeyName" value="session-unison"/>
-                <param name="uidAttributeName" value="uid"/>
-                <param name="formURI" value="/auth/forms/u2fAuth.jsp"/>
-                <param  name="workflowName" value="u2fregistration"/>
-        </params>
-  </authMech>
-  <authMech>
-  <name>acknowledge</name>
-  <required>required</required>
-  <params>
-    <!-- The URI for the jsp page to host the banner and request acknowledgement   -->
-    <param name="loginJSP" value="/auth/forms/acknowledge.jsp"/>
-    <!-- The text of the banner, may be HTML  -->
-    <param name="banner" value="I solemnly swear that I am up to no good!"/>
-  </params>
-</authMech>
   <authMech>
     <name>genoidctoken</name>
     <required>required</required>

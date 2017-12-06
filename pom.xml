@@ -8,10 +8,7 @@
   <name>openunison-openshift-idm</name>
   <url>http://openunison.io</url>
   <repositories>
-    <repository>
-      <id>Tremolo Security Betas</id>
-      <url>https://www.tremolosecurity.com/nexus/content/repositories/betas/</url>
-    </repository>
+
     <repository>
       <id>Tremolo Security Releases</id>
       <url>https://www.tremolosecurity.com/nexus/content/repositories/releases/</url>
@@ -39,6 +36,11 @@
     <dependency>
       <groupId>com.tremolosecurity.unison</groupId>
       <artifactId>openunison-on-undertow</artifactId>
+      <version>1.0.12</version>
+    </dependency>
+    <dependency>
+      <groupId>com.tremolosecurity.unison</groupId>
+      <artifactId>unison-auth-u2f</artifactId>
       <version>1.0.12</version>
     </dependency>
   </dependencies>

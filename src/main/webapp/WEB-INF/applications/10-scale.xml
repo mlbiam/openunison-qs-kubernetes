@@ -8,7 +8,7 @@
       </filterChain>
       <uri>/login/saml</uri>
       <results>
-        <auFail>Default Login Failure</auFail>
+        <auFail>nou2f</auFail>
         <azFail>Default Login Failure</azFail>
       </results>
       <azRules>
@@ -34,7 +34,7 @@
       <!-- List the various results that should happen -->
       <results>
         <azSuccess>ScaleJSRedirect</azSuccess>
-        <auFail>Default Login Failure</auFail>
+        <auFail>nou2f</auFail>
         <azFail>Default Login Failure</azFail>
       </results>
       <!-- Determine if the currently logged in user may access the resource.  If ANY rule succeeds, the authorization succeeds.
@@ -85,7 +85,7 @@
       <results>
         <azSuccess>
         </azSuccess>
-        <auFail>Default Login Failure</auFail>
+        <auFail>nou2f</auFail>
         <azFail>Default Login Failure</azFail>
       </results>
       <azRules>
@@ -134,7 +134,7 @@
       <results>
         <azSuccess>
         </azSuccess>
-        <auFail>Default Login Failure</auFail>
+        <auFail>nou2f</auFail>
         <azFail>Default Login Failure</azFail>
       </results>
       <azRules>
@@ -177,7 +177,7 @@
                 <uri>/newproject/register</uri>
                 <results>
                     <auSuccess></auSuccess>
-                    <auFail>Default Login Failure</auFail>
+                    <auFail>nou2f</auFail>
                     <azSuccess></azSuccess>
                     <azFail>PrivilegedRequest</azFail>
                 </results>
@@ -197,7 +197,7 @@
                 <proxyTo>https://cdn.rawgit.com/TremoloSecurity/OpenUnison/1.0.12/unison/unison-scalejs-register/src/main/html${trimmedURI}</proxyTo>
                 <results>
                     <auSuccess></auSuccess>
-                    <auFail>Default Login Failure</auFail>
+                    <auFail>nou2f</auFail>
                     <azSuccess></azSuccess>
                     <azFail>PrivilegedRequest</azFail>
                 </results>
@@ -215,7 +215,7 @@
 
                 <results>
                     <auSuccess></auSuccess>
-                    <auFail>Default Login Failure</auFail>
+                    <auFail>nou2f</auFail>
                     <azSuccess></azSuccess>
                     <azFail>PrivilegedRequest</azFail>
                 </results>
@@ -233,7 +233,7 @@
 
                 <results>
                     <auSuccess></auSuccess>
-                    <auFail>Default Login Failure</auFail>
+                    <auFail>nou2f</auFail>
                     <azSuccess></azSuccess>
                     <azFail>PrivilegedRequest</azFail>
                 </results>
@@ -257,14 +257,14 @@
                   <param name="kubectlUsage" value="Run this command to use your local kubectl" />
                   <param name="k8sMasterCaCertificateURL" value="https://openunison.tremololocal.lan/k8s.pem"/>
                   <param name="caCertificateURL" value="https://openunison.tremololocal.lan/openunison.pem"/>
-                  <param name="kubectlTemplate" value="kubectl config set-cluster kubernetes --server=https://192.168.56.100:6443 --certificate-authority=/home/mlb/projects/k8s/k8s-ca.pem &amp;&amp; kubectl config set-context kubernetes --cluster=kubernetes --user=$user_id$ &amp;&amp; kubectl config set-credentials $user_id$  --auth-provider=oidc --auth-provider-arg=idp-issuer-url=$token.claims.issuer$ --auth-provider-arg=client-id=$token.trustName$ --auth-provider-arg=refresh-token=$token.refreshToken$ --auth-provider-arg=idp-certificate-authority=/home/mlb/projects/k8s/ssl/ca.pem --auth-provider-arg=id-token=$trust.encodedIdJSON$ &amp;&amp; kubectl config use-context kubernetes" />
+                  <param name="kubectlTemplate" value="kubectl config set-cluster kubernetes --server=https://192.168.56.100:6443 --certificate-authority=/home/mlb/projects/k8s/k8s-ca.pem &amp;&amp; kubectl config set-context kubernetes --cluster=kubernetes --user=$user_id$ &amp;&amp; kubectl config set-credentials $user_id$  --auth-provider=oidc --auth-provider-arg=idp-issuer-url=$token.claims.issuer$ --auth-provider-arg=client-id=$token.trustName$ --auth-provider-arg=refresh-token=$token.refreshToken$ --auth-provider-arg=idp-certificate-authority=/home/mlb/projects/k8s/ssl/ca.pem --auth-provider-arg=id-token=$token.encodedIdJSON$ &amp;&amp; kubectl config use-context kubernetes" />
                 </filter>
                 </filterChain>
                 <uri>/k8stoken/token</uri>
 
                 <results>
                     <auSuccess></auSuccess>
-                    <auFail>Default Login Failure</auFail>
+                    <auFail>nou2f</auFail>
                     <azSuccess></azSuccess>
                     <azFail>PrivilegedRequest</azFail>
                 </results>
