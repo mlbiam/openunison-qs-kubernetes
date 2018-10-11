@@ -432,11 +432,11 @@ amqEnvSecrets = {
         "namespace":"openunison"
     },
     "data":{
-      "JDBC_DRIVER":java.util.Base64.getEncoder().encodeToString(inProp['OU_JDBC_DRIVER']).getBytes("UTF-8"),
-      "JDBC_URL":java.util.Base64.getEncoder().encodeToString(inProp['OU_JDBC_URL']).getBytes("UTF-8"),
-      "JDBC_USER":java.util.Base64.getEncoder().encodeToString(inProp['OU_JDBC_USER']).getBytes("UTF-8"),
-      "JDBC_PASSWORD":java.util.Base64.getEncoder().encodeToString(inProp['OU_JDBC_PASSWORD']).getBytes("UTF-8"),
-      "TLS_KS_PWD":java.util.Base64.getEncoder().encodeToString(ksPassword).getBytes("UTF-8")
+      "JDBC_DRIVER":java.util.Base64.getEncoder().encodeToString(inProp['OU_JDBC_DRIVER'].getBytes("UTF-8")),
+      "JDBC_URL":java.util.Base64.getEncoder().encodeToString(inProp['OU_JDBC_URL'].getBytes("UTF-8")),
+      "JDBC_USER":java.util.Base64.getEncoder().encodeToString(inProp['OU_JDBC_USER'].getBytes("UTF-8")),
+      "JDBC_PASSWORD":java.util.Base64.getEncoder().encodeToString(inProp['OU_JDBC_PASSWORD'].getBytes("UTF-8")),
+      "TLS_KS_PWD":java.util.Base64.getEncoder().encodeToString(ksPassword.getBytes("UTF-8"))
     }
 }
 
