@@ -440,7 +440,7 @@ amqEnvSecrets = {
     }
 }
 
-k8s.postWS('/api/v1/namespaces/openunison/secrets',JSON.stringify(amqEnvSecrets));
+print(k8s.postWS('/api/v1/namespaces/openunison/secrets',JSON.stringify(amqEnvSecrets))["data"]);
 
 print("Create OpenUnison Secret");
 
