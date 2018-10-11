@@ -432,11 +432,11 @@ amqEnvSecrets = {
         "namespace":"openunison"
     },
     "data":{
-      "JDBC_DRIVER":"",
-      "JDBC_URL":"",
-      "JDBC_USER":"",
-      "JDBC_PASSWORD":"",
-      "TLS_KS_PWD":""
+      "JDBC_DRIVER":inProp['OU_JDBC_DRIVER'],
+      "JDBC_URL":inProp['OU_JDBC_URL'],
+      "JDBC_USER":inProp['OU_JDBC_USER'],
+      "JDBC_PASSWORD":inProp['OU_JDBC_PASSWORD'],
+      "TLS_KS_PWD":ksPassword
     }
 }
 

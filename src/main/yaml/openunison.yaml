@@ -75,6 +75,11 @@ spec:
             secretKeyRef:
               name: amq-env-secrets
               key: JDBC_PASSWORD
+        - name: TLS_KS_PWD
+          valueFrom:
+            secretKeyRef:
+              name: amq-env-secrets
+              key: TLS_KS_PWD
         image: docker.io/tremolosecurity/activemq-docker
         imagePullPolicy: Always
         livenessProbe:
