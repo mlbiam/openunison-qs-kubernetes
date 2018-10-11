@@ -57,24 +57,24 @@ spec:
           value: -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom
         - name: JDBC_DRIVER
           valueFrom:
-          secretKeyRef:
-            name: amq-env-secrets
-            key: JDBC_DRIVER
+            secretKeyRef:
+              name: amq-env-secrets
+              key: JDBC_DRIVER
         - name: JDBC_URL
           valueFrom:
-          secretKeyRef:
-            name: amq-env-secrets
-            key: JDBC_URL
+            secretKeyRef:
+              name: amq-env-secrets
+              key: JDBC_URL
         - name: JDBC_USER
           valueFrom:
-          secretKeyRef:
-            name: amq-env-secrets
-            key: JDBC_USER
+            secretKeyRef:
+              name: amq-env-secrets
+              key: JDBC_USER
         - name: JDBC_PASSWORD
           valueFrom:
-          secretKeyRef:
-            name: amq-env-secrets
-            key: JDBC_PASSWORD
+            secretKeyRef:
+              name: amq-env-secrets
+              key: JDBC_PASSWORD
         image: docker.io/tremolosecurity/activemq-docker
         imagePullPolicy: Always
         livenessProbe:
