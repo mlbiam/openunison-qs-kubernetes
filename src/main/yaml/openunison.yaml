@@ -86,7 +86,7 @@ spec:
           tcpSocket:
             port: 61616
           failureThreshold: 10
-          initialDelaySeconds: 30
+          initialDelaySeconds: 10
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 10
@@ -102,7 +102,7 @@ spec:
           tcpSocket:
             port: 61616
           failureThreshold: 3
-          initialDelaySeconds: 30
+          initialDelaySeconds: 10
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 10
