@@ -92,7 +92,8 @@ approveReq.status.conditions = [
 
 apiResp = k8s.putWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/amq.openunison.svc.cluster.local/approval',JSON.stringify(approveReq));
 print("Retrieving amq certificate from API server");
-apiResp = k8s.callWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/amq.openunison.svc.cluster.local','java.util.Base64.getDecoder().decode(JSON.parse(ws_response_json).status.certificate);check_ws_response=true;',10);
+//apiResp = k8s.callWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/amq.openunison.svc.cluster.local','java.util.Base64.getDecoder().decode(JSON.parse(ws_response_json).status.certificate);check_ws_response=true;',10);
+apiResp = k8s.callWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/amq.openunison.svc.cluster.local','java.util.Base64.getDecoder().decode("sdfsdf");check_ws_response=true;',10);
 certResp = JSON.parse(apiResp.data);
 b64cert = certResp.status.certificate;
 CertUtils.importSignedCert(amqSrvx509data,b64cert);
