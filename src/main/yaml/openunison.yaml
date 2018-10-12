@@ -224,8 +224,10 @@ spec:
         - name: JAVA_OPTS
           value: -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom
             -DunisonEnvironmentFile=/etc/openunison/ou.env
+        - name: fortriggerupdates
+          value: changeme
         - name: OPENUNISON_WAR_URL
-          value: https://www.tremolosecurity.com/nexus/service/local/repositories/releases/content/io/openunison/openunison-k8s-activedirectory/1.0.15/openunison-k8s-activedirectory-1.0.15.war
+          value: https://www.tremolosecurity.com/nexus/service/local/repositories/betas/content/io/openunison/openunison-k8s-activedirectory/1.0.15/openunison-k8s-activedirectory-1.0.15.war
         image: docker.io/tremolosecurity/openunison-docker-ubuntu
         imagePullPolicy: Always
         livenessProbe:
