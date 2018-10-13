@@ -21,6 +21,7 @@ ksPassword = inProp['unisonKeystorePassword'];
 ouKs = Java.type("java.security.KeyStore").getInstance("PKCS12");
 ouKs.load(null,ksPassword.toCharArray());
 
+use_k8s_cm = inProp['USE_K8S_CM'] == "true";
 
 print("Generating client certificate for activemq");
 amqCertInfo = {
@@ -59,44 +60,49 @@ amqSrvCertInfo = {
 
 var amqSrvx509data = CertUtils.createCertificate(amqSrvCertInfo);
 
-print("create csr for activemq");
+if (use_k8s_cm) {
+  print("create csr for activemq");
 
-amqCsrReq = {
-  "apiVersion": "certificates.k8s.io/v1beta1",
-  "kind": "CertificateSigningRequest",
-  "metadata": {
-    "name": "amq.openunison.svc.cluster.local",
-  },
-  "spec": {
-    "request": java.util.Base64.getEncoder().encodeToString(CertUtils.generateCSR(amqSrvx509data).getBytes("utf-8")),
-    "usages": [
-      "digital signature",
-      "key encipherment",
-      "server auth"
-    ]
-  }
-};
+  amqCsrReq = {
+    "apiVersion": "certificates.k8s.io/v1beta1",
+    "kind": "CertificateSigningRequest",
+    "metadata": {
+      "name": "amq.openunison.svc.cluster.local",
+    },
+    "spec": {
+      "request": java.util.Base64.getEncoder().encodeToString(CertUtils.generateCSR(amqSrvx509data).getBytes("utf-8")),
+      "usages": [
+        "digital signature",
+        "key encipherment",
+        "server auth"
+      ]
+    }
+  };
 
-print("Requesting amq certificate");
-apiResp = k8s.postWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests',JSON.stringify(amqCsrReq));
+  print("Requesting amq certificate");
+  apiResp = k8s.postWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests',JSON.stringify(amqCsrReq));
 
-print("Approving amq certificate");
-approveReq = JSON.parse(apiResp.data);
-approveReq.status.conditions = [
-  {
-      "type":"Approved",
-      "reason":"OpenUnison Deployment",
-      "message":"This CSR was approved by the OpenUnison artifact deployment job"
-  }
-];
+  print("Approving amq certificate");
+  approveReq = JSON.parse(apiResp.data);
+  approveReq.status.conditions = [
+    {
+        "type":"Approved",
+        "reason":"OpenUnison Deployment",
+        "message":"This CSR was approved by the OpenUnison artifact deployment job"
+    }
+  ];
 
-apiResp = k8s.putWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/amq.openunison.svc.cluster.local/approval',JSON.stringify(approveReq));
-print("Retrieving amq certificate from API server");
-apiResp = k8s.callWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/amq.openunison.svc.cluster.local','java.util.Base64.getDecoder().decode(JSON.parse(ws_response_json).status.certificate);check_ws_response=true;',10);
-print(apiResp.data);
-certResp = JSON.parse(apiResp.data);
-b64cert = certResp.status.certificate;
-CertUtils.importSignedCert(amqSrvx509data,b64cert);
+  apiResp = k8s.putWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/amq.openunison.svc.cluster.local/approval',JSON.stringify(approveReq));
+  print("Retrieving amq certificate from API server");
+  apiResp = k8s.callWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/amq.openunison.svc.cluster.local','java.util.Base64.getDecoder().decode(JSON.parse(ws_response_json).status.certificate);check_ws_response=true;',10);
+  print(apiResp.data);
+  certResp = JSON.parse(apiResp.data);
+  b64cert = certResp.status.certificate;
+  CertUtils.importSignedCert(amqSrvx509data,b64cert);
+} else {
+  //not using CM, so store the amq cert directly into the openunison keystore
+  ouKs.setCertificateEntry('trusted-amq-server',amqSrvx509data.getCertificate());
+}
 
 print("Saving amq certificate to amq keystore");
 CertUtils.saveX509ToKeystore(amqKS,ksPassword,"broker",amqSrvx509data);
@@ -120,46 +126,48 @@ certInfo = {
 
 var x509data = CertUtils.createCertificate(certInfo);
 
-print("Creating CSR for API server");
+if (use_k8s_cm) {
+  print("Creating CSR for API server");
 
 
 
-csrReq = {
-    "apiVersion": "certificates.k8s.io/v1beta1",
-    "kind": "CertificateSigningRequest",
-    "metadata": {
-      "name": "openunison.openunison.svc.cluster.local",
-    },
-    "spec": {
-      "request": java.util.Base64.getEncoder().encodeToString(CertUtils.generateCSR(x509data).getBytes("utf-8")),
-      "usages": [
-        "digital signature",
-        "key encipherment",
-        "server auth"
-      ]
-    }
-  };
+  csrReq = {
+      "apiVersion": "certificates.k8s.io/v1beta1",
+      "kind": "CertificateSigningRequest",
+      "metadata": {
+        "name": "openunison.openunison.svc.cluster.local",
+      },
+      "spec": {
+        "request": java.util.Base64.getEncoder().encodeToString(CertUtils.generateCSR(x509data).getBytes("utf-8")),
+        "usages": [
+          "digital signature",
+          "key encipherment",
+          "server auth"
+        ]
+      }
+    };
 
-print("Requesting certificate");
-apiResp = k8s.postWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests',JSON.stringify(csrReq));
+  print("Requesting certificate");
+  apiResp = k8s.postWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests',JSON.stringify(csrReq));
 
-print("Approving certificate");
-approveReq = JSON.parse(apiResp.data);
-approveReq.status.conditions = [
-    {
-        "type":"Approved",
-        "reason":"OpenUnison Deployment",
-        "message":"This CSR was approved by the OpenUnison artifact deployment job"
-    }
-];
+  print("Approving certificate");
+  approveReq = JSON.parse(apiResp.data);
+  approveReq.status.conditions = [
+      {
+          "type":"Approved",
+          "reason":"OpenUnison Deployment",
+          "message":"This CSR was approved by the OpenUnison artifact deployment job"
+      }
+  ];
 
-apiResp = k8s.putWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/openunison.openunison.svc.cluster.local/approval',JSON.stringify(approveReq));
-print("Retrieving certificate from API server");
-apiResp = k8s.callWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/openunison.openunison.svc.cluster.local','java.util.Base64.getDecoder().decode(JSON.parse(ws_response_json).status.certificate);check_ws_response=true;',10);
-print(apiResp.data);
-certResp = JSON.parse(apiResp.data);
-b64cert = certResp.status.certificate;
-CertUtils.importSignedCert(x509data,b64cert);
+  apiResp = k8s.putWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/openunison.openunison.svc.cluster.local/approval',JSON.stringify(approveReq));
+  print("Retrieving certificate from API server");
+  apiResp = k8s.callWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/openunison.openunison.svc.cluster.local','java.util.Base64.getDecoder().decode(JSON.parse(ws_response_json).status.certificate);check_ws_response=true;',10);
+  print(apiResp.data);
+  certResp = JSON.parse(apiResp.data);
+  b64cert = certResp.status.certificate;
+  CertUtils.importSignedCert(x509data,b64cert);
+}
 
 print("Saving certificate to keystore");
 CertUtils.saveX509ToKeystore(ouKs,ksPassword,"unison-tls",x509data);
@@ -219,46 +227,50 @@ dbCertInfo = {
 
 dbX509data = CertUtils.createCertificate(dbCertInfo);
 
-print("Creating CSR for API server");
+if (use_k8s_cm) {
+  print("Creating CSR for API server");
 
 
 
-csrReq = {
-    "apiVersion": "certificates.k8s.io/v1beta1",
-    "kind": "CertificateSigningRequest",
-    "metadata": {
-      "name": "kubernetes-dashboard.kube-system.svc.cluster.local",
-    },
-    "spec": {
-      "request": java.util.Base64.getEncoder().encodeToString(CertUtils.generateCSR(dbX509data).getBytes("utf-8")),
-      "usages": [
-        "digital signature",
-        "key encipherment",
-        "server auth"
-      ]
-    }
-  };
+  csrReq = {
+      "apiVersion": "certificates.k8s.io/v1beta1",
+      "kind": "CertificateSigningRequest",
+      "metadata": {
+        "name": "kubernetes-dashboard.kube-system.svc.cluster.local",
+      },
+      "spec": {
+        "request": java.util.Base64.getEncoder().encodeToString(CertUtils.generateCSR(dbX509data).getBytes("utf-8")),
+        "usages": [
+          "digital signature",
+          "key encipherment",
+          "server auth"
+        ]
+      }
+    };
 
-print("Requesting certificate");
-apiResp = k8s.postWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests',JSON.stringify(csrReq));
-print("Approving certificate");
-approveReq = JSON.parse(apiResp.data);
-approveReq.status.conditions = [
-    {
-        "type":"Approved",
-        "reason":"OpenUnison Deployment",
-        "message":"This CSR was approved by the OpenUnison artifact deployment job"
-    }
-];
+  print("Requesting certificate");
+  apiResp = k8s.postWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests',JSON.stringify(csrReq));
+  print("Approving certificate");
+  approveReq = JSON.parse(apiResp.data);
+  approveReq.status.conditions = [
+      {
+          "type":"Approved",
+          "reason":"OpenUnison Deployment",
+          "message":"This CSR was approved by the OpenUnison artifact deployment job"
+      }
+  ];
 
-apiResp = k8s.putWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/kubernetes-dashboard.kube-system.svc.cluster.local/approval',JSON.stringify(approveReq));
-print("Retrieving certificate from API server");
-apiResp = k8s.callWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/kubernetes-dashboard.kube-system.svc.cluster.local','java.util.Base64.getDecoder().decode(JSON.parse(ws_response_json).status.certificate);check_ws_response=true;',10);
-print(apiResp.data);
-certResp = JSON.parse(apiResp.data);
-b64cert = certResp.status.certificate;
-CertUtils.importSignedCert(dbX509data,b64cert);
-
+  apiResp = k8s.putWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/kubernetes-dashboard.kube-system.svc.cluster.local/approval',JSON.stringify(approveReq));
+  print("Retrieving certificate from API server");
+  apiResp = k8s.callWS('/apis/certificates.k8s.io/v1beta1/certificatesigningrequests/kubernetes-dashboard.kube-system.svc.cluster.local','java.util.Base64.getDecoder().decode(JSON.parse(ws_response_json).status.certificate);check_ws_response=true;',10);
+  print(apiResp.data);
+  certResp = JSON.parse(apiResp.data);
+  b64cert = certResp.status.certificate;
+  CertUtils.importSignedCert(dbX509data,b64cert);
+} else {
+  //not using k8s cm, so just import the dashboard cert into the openunison keystore
+  ouKs.setCertificateEntry("trusted-k8s-dasboard",dbX509data.getCertificate());
+}
 print("Creating dashboard secret");
 
 dbsecret = {
