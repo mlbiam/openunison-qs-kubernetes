@@ -55,6 +55,6 @@
             <logoutURI>/logout</logoutURI>
             <keyAlias>session-unison</keyAlias>
             <secure>true</secure>
-            <timeout>900</timeout>
+            <timeout>#[SESSION_INACTIVITY_TIMEOUT_SECONDS]</timeout>
         </cookieConfig>
     </application>

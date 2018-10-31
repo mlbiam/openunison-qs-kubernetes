@@ -85,6 +85,7 @@ OU_CERT_ST=Virginia
 OU_CERT_C=US
 unisonKeystorePassword=start123
 USE_K8S_CM=true
+SESSION_INACTIVITY_TIMEOUT_SECONDS=900
 ```
 
 *Detailed Description or Properties*
@@ -122,6 +123,7 @@ USE_K8S_CM=true
 | OU_CERT_C | The `C` attribute for the forward facing certificate |
 | unisonKeystorePassword | The password for OpenUnison's keystore |
 | USE_K8S_CM | Tells the deployment system if you should use k8s' built in certificate manager.  If your distrobution doesn't support this (such as Canonical and Rancher), set this to false |
+| SESSION_INACTIVITY_TIMEOUT_SECONDS | The number of seconds of inactivity before the session is terminated, also the length of the refresh token's session |
 
 
 ## Prepare Deployment
@@ -191,6 +193,30 @@ Once SSO is enabled in the next step, you'll need a cluster administrator to be 
 10. Click on "Confirm Approval"
 
 At this point you will be provisioned to the `k8s-cluster-administrators` group in the database that has a RoleBinding to the `cluster-admin` Role.  Logout of OpenUnison and log back in.  If you click on your email address in the upper left, you'll see that you have the Role `k8s-cluster-administrators`.  
+
+# Updating Secrets and Certificates
+
+In order to change the secrets or update certificate store:
+
+Download the contents of `openunison-secrets` in the `openunison` namespace into an empty directory
+
+```
+kubectl get  secret openunison-secrets -o json  -n openunison | python /apth/to/openunison-qs-kubernetes/src/main/python/download_secrets.py
+```
+
+`download_secrets.py` is a utility script for pulling the files out of secrets and config maps.  Next, make your changes.  You can't apply over an existing secret, so next delete the current secret:
+
+```
+kubectl delete secret openunison-secrets -n openunison
+```
+
+Finally, create the secret from the directory where you downloaded the secrets:
+
+```
+kubectl create secret generic openunison-secrets --from-file=. -n openunison
+```
+
+Redpeloy OpenUnison to pick up the changes.  The easiest way is to update an environment variable in the `openunison` deployment
 
 # Whats next?
 Users can now login to create namespaces, request access to cluster admin or request access to other clusters.
