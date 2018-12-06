@@ -6,12 +6,12 @@ import base64
 with open('src/main/js/deploy.js','r') as jsdep:
     deploy_js = jsdep.read()
 
-deploy_js = base64.standard_b64encode(deploy_js)
+#deploy_js = base64.standard_b64encode(deploy_js)
 
 with open('src/main/yaml/openunison.yaml','r') as oyaml:
     openunison_yaml = oyaml.read()
 
-openunison_yaml = base64.standard_b64encode(openunison_yaml)
+#openunison_yaml = base64.standard_b64encode(openunison_yaml)
 
 with open('src/main/yaml/artifact-deployment-base.yaml','r') as artifact_deployment_src:
     artifact_deployment_yaml = artifact_deployment_src.read()
