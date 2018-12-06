@@ -226,6 +226,8 @@ spec:
             -DunisonEnvironmentFile=/etc/openunison/ou.env
         - name: fortriggerupdates
           value: changeme
+        - name: MYVD_CONFIG_PATH
+          value: WEB-INF/myvd.conf
         - name: OPENUNISON_WAR_URL
           value: https://www.tremolosecurity.com/nexus/service/local/repositories/betas/content/io/openunison/openunison-k8s-activedirectory/1.0.15/openunison-k8s-activedirectory-1.0.15.war
         image: docker.io/tremolosecurity/openunison-docker-ubuntu
@@ -268,6 +270,8 @@ spec:
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
+      serviceAccount: openunison
+      serviceAccountName: openunison
       volumes:
       - name: secret-volume
         secret:
