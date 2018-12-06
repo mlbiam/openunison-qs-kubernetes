@@ -16,6 +16,9 @@ with open('src/main/yaml/openunison.yaml','r') as oyaml:
 with open('src/main/yaml/artifact-deployment-base.yaml','r') as artifact_deployment_src:
     artifact_deployment_yaml = artifact_deployment_src.read()
 
+with open('src/main/sql/quartz_tables.sql') as quartz_sql_src:
+    quartz_sql = quartz_sql_src.read();
+
 config_map = {
     "apiVersion":"v1",
     "kind":"ConfigMap",
@@ -25,7 +28,8 @@ config_map = {
     },
     "data":{
         "deploy.js":deploy_js,
-        "openunison.yaml":openunison_yaml
+        "openunison.yaml":openunison_yaml,
+        "quartz.sql":quartz_sql
     }
 }
 

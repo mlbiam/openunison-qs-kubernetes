@@ -408,7 +408,7 @@ k8s.postWS('/api/v1/namespaces/openunison/secrets',JSON.stringify(ingressSecret)
 
 //load quartz sql
 print("pulling quartz sql");
-quartzSQL = com.tremolosecurity.kubernetes.artifacts.util.NetUtil.downloadFile("https://raw.githubusercontent.com/quartznet/quartznet/master/database/tables/tables_mysql_innodb.sql");
+quartzSQL = com.tremolosecurity.kubernetes.artifacts.util.NetUtil.downloadFile("file:///etc/input-maps/quartz.sql");
 print("parsing quartz sql");
 parsedSQL = com.tremolosecurity.kubernetes.artifacts.util.DbUtils.parseSQL(quartzSQL);
 print("runnins quartz sql");
