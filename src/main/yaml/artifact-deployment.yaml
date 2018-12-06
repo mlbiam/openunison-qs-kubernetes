@@ -52,6 +52,6 @@ spec:
           configMap:
             name: extracerts
         - name: input-maps
-          configMaps:
+          configMap:
             name: deployment-scripts
   backoffLimit: 1
