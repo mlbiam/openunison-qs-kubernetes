@@ -104,7 +104,7 @@ data:
     ,\n        \"namespace\":\"kube-system\"\n    },\n    \"data\":{\n        \"dashboard.crt\"\
     : java.util.Base64.getEncoder().encodeToString(CertUtils.exportCert(dbX509data.getCertificate()).getBytes(\"\
     UTF-8\")),\n        \"dashboard.key\": java.util.Base64.getEncoder().encodeToString(CertUtils.exportKey(dbX509data.getKeyData().getPrivate()).getBytes(\"\
-    UTF-8\"))\n    }\n};\n\nk8s.postWS('/api/v1/namespaces/kube-system/secrets',JSON.stringify(dbsecret));\n\
+    UTF-8\"))\n    }\n};\n\nres = k8s.postWS('/api/v1/namespaces/kube-system/secrets',JSON.stringify(dbsecret));\n\
     \nif (res[\"code\"] == 409) {\n  print(\"Secret alread exists, lets delete then\
     \ recreate\");\n  k8s.deleteWS('/api/v1/namespaces/kube-system/secrets/kubernetes-dashboard-certs');\n\
     \n  print(\"re-creating\");\n  k8s.postWS('/api/v1/namespaces/kube-system/secrets',JSON.stringify(dbsecret));\n\

@@ -287,7 +287,7 @@ dbsecret = {
     }
 };
 
-k8s.postWS('/api/v1/namespaces/kube-system/secrets',JSON.stringify(dbsecret));
+res = k8s.postWS('/api/v1/namespaces/kube-system/secrets',JSON.stringify(dbsecret));
 
 if (res["code"] == 409) {
   print("Secret alread exists, lets delete then recreate");
