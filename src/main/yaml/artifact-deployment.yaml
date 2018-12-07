@@ -171,14 +171,22 @@ data:
     \nprint(\"Creating post deployment configmap\");\n\noidcFlags = \"--oidc-issuer-url=https://\"\
     \ + inProp[\"OU_HOST\"] + \"/auth/idp/k8sIdp\\n\" +\n            \"--oidc-client-id=kubernetes\\\
     n\" +\n            \"--oidc-username-claim=sub\\n\" + \n            \"--oidc-groups-claim=groups\\\
-    n\" +\n            \"--oidc-ca-file=/etc/kubernetes/pki/ou-ca.pem\";\n\nprint(\"\
+    n\" +\n            \"--oidc-ca-file=/etc/kubernetes/pki/ou-ca.pem\";\n\ncanonicalOidcFlags\
+    \ = \"oidc-issuer-url=https://\" + inProp[\"OU_HOST\"] + \"/auth/idp/k8sIdp \"\
+    \ +\n                      \"oidc-client-id=kubernetes \" +\n                \
+    \      \"oidc-username-claim=sub \" + \n                      \"oidc-groups-claim=groups\
+    \ \" +\n                      \"oidc-ca-file=/root/cdk/ou-ca.pem\";\n\nprint(\"\
     Runing kubectl create\");\nk8s.kubectlCreate(k8s.processTemplate(deploymentTemplate,inProp));\n\
     print(\"kubectl complete\");\n\n\n\n\n\n\n\n\n\n\n\n\ncfgMap = {\n    \"apiVersion\"\
     :\"v1\",\n    \"kind\":\"ConfigMap\",\n    \"metadata\":{\n        \"name\":\"\
     api-server-config\",\n        \"namespace\":\"openunison\"\n    },\n    \"data\"\
     :{\n        \"oidc-api-server-flags\":oidcFlags,\n        \"ou-ca.pem-base64-encoded\"\
-    :CertUtils.exportCert(ingressX509data.getCertificate())\n        //\"deployment\"\
-    :java.util.Base64.getEncoder().encodeToString(k8s.processTemplate(deploymentTemplate,inProp).getBytes(\"\
+    :CertUtils.exportCert(ingressX509data.getCertificate()),\n        \"canonical-cdk-flags\"\
+    :canonicalOidcFlags,\n        \"individual-parameters\": {\n           \"oidc-issuer-url\"\
+    :\"https://\" + inProp[\"OU_HOST\"] + \"/auth/idp/k8sIdp\",\n           \"oidc-client-id\"\
+    :\"kubernetes\",\n           \"oidc-username-claim\":\"sub\",\n           \"oidc-groups-claim\"\
+    :\"groups\",\n           \"oidc-ca-file\":\"/etc/kubernetes/pki/ou-ca.pem\"\n\
+    \        }\n        //\"deployment\":java.util.Base64.getEncoder().encodeToString(k8s.processTemplate(deploymentTemplate,inProp).getBytes(\"\
     UTF-8\"))\n    }\n};\n\nk8s.postWS('/api/v1/namespaces/openunison/configmaps',JSON.stringify(cfgMap));\n\
     \nprint(\"Deleting cluster role binding\");\nk8s.deleteWS('/apis/rbac.authorization.k8s.io/v1/clusterrolebindings/artifact-deployment');\n\
     \nprint(\"Artifacts Created, to configure the API server run 'kubectl describe\
