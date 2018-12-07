@@ -514,13 +514,12 @@ cfgMap = {
         "oidc-api-server-flags":oidcFlags,
         "ou-ca.pem-base64-encoded":CertUtils.exportCert(ingressX509data.getCertificate()),
         "canonical-cdk-flags":canonicalOidcFlags,
-        "individual-parameters": {
-           "oidc-issuer-url":"https://" + inProp["OU_HOST"] + "/auth/idp/k8sIdp",
-           "oidc-client-id":"kubernetes",
-           "oidc-username-claim":"sub",
-           "oidc-groups-claim":"groups",
-           "oidc-ca-file":"/etc/kubernetes/pki/ou-ca.pem"
-        }
+        "oidc-issuer-url":"https://" + inProp["OU_HOST"] + "/auth/idp/k8sIdp",
+        "oidc-client-id":"kubernetes",
+        "oidc-username-claim":"sub",
+        "oidc-groups-claim":"groups",
+        "oidc-ca-file":"/etc/kubernetes/pki/ou-ca.pem"
+        
         //"deployment":java.util.Base64.getEncoder().encodeToString(k8s.processTemplate(deploymentTemplate,inProp).getBytes("UTF-8"))
     }
 };
